@@ -54,16 +54,22 @@ def shop():
 
 # Adding item to the cart
 def add_item(index):
-    
-    # calculate tax
-    x = calculate_tax(stock[index[]])
+    global cash
 
-    
-    # check if addition with tax out of budget 
-    # add to cart and subtract amount *with tax* from cash
-    # cart dict looks like {"index":1, "name":"Waffle Maker", "price":56.99, "quantity": 2}
-    # increment quantity if item is already in the array
-    pass
+    item = stock[index]
+    price_with_tax = item["price"] + calculate_tax(item["price"])
+
+    if cash >= price_with_tax:
+        cash -= price_with_tax
+        
+        for cart_item in cart:
+            if cart_item["index"] == item["index"]:
+                cart_item["quantity"] += 1
+                return
+        
+        cart.append({"index": index, "name": item["name"], "price": item["price"], "quantity": 1})
+    else:
+        print(f"Sorry, you don't have enough money to add {item['name']} to your cart.")
 
 #calculating tax
 def calculate_tax(price):
@@ -78,7 +84,14 @@ def display_items():
     #print("Enter the item index to add to cart: ")
 def checkout():
     # displays the cart one more time and asks the user to confirm the purchase. Return false if they say no and true if they say yes
-    return False
+    display_receipt()
+    confirm = input("Would you like to proceed to checkout? (y/n): ")
+    if confirm.lower() == "y":
+        print("Thank you for shopping at Walmart! Your remaining balance is: ", cash)
+        return True
+    else:
+        print("Your cart has been cleared.")
+        return False
 
 def view_cart():
     # iterate through the array and print the cart items in a table format

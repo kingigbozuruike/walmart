@@ -71,7 +71,7 @@ def display_items():
     global stock
     print(LOGO)
     for i, item in enumerate(stock):
-        print(f'{i}) {item["name"]:<30}: ${item["price"]}')
+        print(f'{i+1}) {item["name"]:<30}: ${item["price"]}')
     
 
 def checkout():

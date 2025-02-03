@@ -18,12 +18,9 @@ stock = [
     {"name": "Great Value Paper Towels", "price": 4.98}
 ]
 
-cart = [
-    #{"index":1, "name":"Waffle Maker", "price":56.99, "quantity": 2}
-]
+cart = []
 
 def shop():
-    # display items
     while True:
         display_items()
         choice = input("Enter item index to select item\nEnter 'c' to view cart or 'p' to proceed to checkout: ")
@@ -46,11 +43,6 @@ def shop():
                 except:
                     print("please enter a valid index, c to view cart ot p to check out")
 
-
-
-        # allow user to select item, quantity
-        # notify the user if cart add unsuccessful
-    
 
 # Adding item to the cart
 def add_item(index):
@@ -81,9 +73,8 @@ def display_items():
     for i, item in enumerate(stock):
         print(f'{i}) {item["name"]:<30}: ${item["price"]}')
     
-    #print("Enter the item index to add to cart: ")
+
 def checkout():
-    # displays the cart one more time and asks the user to confirm the purchase. Return false if they say no and true if they say yes
     display_receipt()
     confirm = input("Would you like to proceed to checkout? (y/n): ")
     if confirm.lower() == "y":
@@ -94,18 +85,35 @@ def checkout():
         return False
 
 def view_cart():
-    # iterate through the array and print the cart items in a table format
-    pass
+    print("\nYour Cart:")
+    display_cart_items()
+
+def display_cart_items():
+    if not cart:
+        print("Your cart is empty.")
+    else:
+        total = 0
+        for item in cart:
+            total += item["price"] * item["quantity"]
+            print(f'{item["name"]} x{item["quantity"]}: ${item["price"] * item["quantity"]:.2f}')
+        print(f"Total: ${total:.2f}")
 
 def display_receipt():
-    # show items with tax added. for each item multiply the price by the count 
-    # if an item is $10 and you bought 3
-
-    # item name x 3 : $30
+    print("\n--- Receipt ---")
+    total_before_tax = 0
+    tax_total = 0
+    for item in cart:
+        item_total = item["price"] * item["quantity"]
+        tax = calculate_tax(item["price"]) * item["quantity"]
+        total_before_tax += item_total
+        tax_total += tax
+        print(f'{item["name"]} x{item["quantity"]}: ${item_total:.2f}')
+        print(f"Tax for {item['name']} (10.44%): ${tax:.2f}")
     
-    # tax : $30 @ 10.44% : 3.13
-    # balance to pay : $33.13
-    pass
+    print(f"\nSubtotal: ${total_before_tax:.2f}")
+    print(f"Total Tax: ${tax_total:.2f}")
+    print(f"Total Amount: ${total_before_tax + tax_total:.2f}")
+    print(f"Amount Paid: ${total_before_tax + tax_total:.2f}")
 
 shop()
 
